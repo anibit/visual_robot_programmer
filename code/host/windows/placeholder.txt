@@ -1,0 +1,1 @@
+temporary file, since git doesn't like empty directories.
