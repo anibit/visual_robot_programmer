@@ -1,0 +1,286 @@
+<html>
+    <head>
+        <title>Anibit Graphical Programmer Help</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="../anibit_blockly.css">
+        <style>body {overflow: visible;} 
+            .warning {color: red;}
+        </style>
+        <script type="text/javascript" >
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                        m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+            ga('create', 'UA-40557074-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+    </head>
+    <body>
+        <strong>Please Note that this documentation is a work in progress.</strong><br>
+        It is far from complete.<br>
+        For a detailed user guide of the Pololu 3pi Robot, see the 
+        <a href="https://www.pololu.com/docs/0J21">guide</a> on Pololu.
+        <h1>Help for the Pololu 3Pi Blocks</h1>
+        This is the Pololu 3pi specific help for the <a href=".." target="agp">Anbit Graphical Programmer</a>
+        <h2 id="threepi_setup" >Setup Block</h2>
+        The Setup block is a special block that tells the IDE that the blocks within 
+        it belong inside the Arduino setup function. All other blocks are placed in the Arduino loop
+        function. The Arduino setup function is called once when the device is powered up
+        or resets. 
+        The loop function on the other hand is called repeatedly if it gets to the end.
+
+        <h2 id="threepi_set_motors" >Set Motors Block</h2>
+        The Set Motors Block lets you set a value for desired motor speed. This number is on a scale of 
+        -255 to 255. a "0" is for turning the motors off. A value less than zero sets that motor
+        to run in the reverse direction. Be careful when your experimenting with motors,
+        Your robot might try to run away as soon as it boots! It's a good idea to 
+        have your program wait for a button press on boot up so that you don't have any unexpected surprises.
+
+        <h2 id="threepi_set_motor" >Set Motor Block</h2>
+        The Set Motor Block is very similar to the <a href='#threepi_set_motors'>Set Motors Block</a>, but 
+        it lets you set one motor at a time, leaving the other motor alone.
+
+        <h2 id="threepi_play_tone" >Play Tone Block</h2>
+        The Play Tone Block will cause thee speaker on the 3Pi to play a tone. The 'pitch'
+        of the tone is set by the 'frequency' parameter.
+        <h4>Parameters</h4>
+        <ul>
+            <li> frequency : The frequency, in "Hertz" of the tone. Value values are from 40 to 10000
+            <li> duration : The duration, or how long to play the tone, in "milliseconds", or 1/1000th
+                of a second. The maximum valid value depends on the frequency.
+            <li> volume : how loud the tone should be. Valid values range from 0 (silent)
+                to 15 (full loudness)
+        </ul>
+        Like all Sound blocks, this block plays in the background and moves on to the next 
+        block immediately. If you wish to pause until the sound is finished, you should use the 
+        <a href="#threepi_is_music_playing">Is Music Playing Block</a> or the 
+        <a href="#threepi_wait_for_music">Wait For Music Block</a>. Any later
+        Sound block will override the previous blocks that might still be in effect.<br>
+        For more detailed technical explanations, see: <a href='https://www.pololu.com/docs/0J18/3'>https://www.pololu.com/docs/0J18/3</a><br>
+        <strong>Note on maximum tone duration</strong><br>
+        Due to hardware limitations, the maximum duration for a tone depends on it's frequency. The formula for maximum
+        duration is: <br><br>
+        &lt;max duration&gt; = 65535/(&lt;frequency in Hz&gt; * 1000) <br>
+
+        <h2 id="threepi_play_note" >Play Note Block</h2>
+        The Play Note Block will cause thee speaker on the 3Pi to play a musical note. This
+        is very similar to the <a href="#threepi_play_tone">Play Tone Block</a> except you
+        do not have to know how to get the numerical frequency value for a note. The "note"\
+        and "Octave" inputs determine the actual frequency of the note.
+        <h4>Parameters</h4>
+        <ul>
+            <li> Note : The musical note to play, "C" through "B".
+            <li> Octave : The octave of the note.
+            <li> duration : The duration, or how long to play the tone, in "milliseconds", or 1/1000th
+                of a second. The maximum valid value depends on the note.
+            <li> volume : how loud the note should be. Valid values range from 0 (silent)
+                to 15 (full loudness)
+        </ul>
+        Like all Sound blocks, this block plays in the background and moves on to the next 
+        block immediately. If you wish to pause until the sound is finished, you should use the 
+        <a href="#threepi_is_music_playing">Is Music Playing Block</a> or the 
+        <a href="#threepi_wait_for_music">Wait For Music Block</a>. Any later
+        Sound block will override the previous blocks that might still be in effect.<br>
+
+        For more detailed technical explanations, see: <a href='https://www.pololu.com/docs/0J18/3'>https://www.pololu.com/docs/0J18/3</a><br>
+        <strong>Note on maximum note duration</strong><br>
+        Due to hardware limitations, the maximum duration for a note depends on it's frequency. The formula for maximum
+        duration is: <br><br>
+        &lt;max duration&gt; = 65535/(&lt;frequency in Hz&gt; * 1000) <br><br>
+        Since it is not easy to know the frequency with this block, you should 
+        limit the duration to 6553 or less, which allows you to play up to a 6.5 second
+        note. If you want longer notes, you should use the <a href='#threepi_play_music'>Play Music Block</a>, and 
+        use multiple notes.
+
+        <h2 id="threepi_play_music" >Play Music Block</h2>
+        The Play Music Block lets you play very fancy music from your robot. This is 
+        an advanced block, the "string" parameter has its own mini-language that describes
+        the set of notes to play to make music. 
+        <p >The notes are specified by the characters <b>C</b>, <b>D</b>, <b>E</b>, <b>F</b>, <b>G</b>, <b>A</b>, and <b>B</b>, and they are played by default as &#8220;quarter notes&#8221; with a length of 500&nbsp;ms.  This corresponds to a tempo of 120&nbsp;beats/min.  Other durations can be specified by putting a number immediately after the note.  For example, C8 specifies C played as an eighth note, with half the duration of a quarter note. The special note <b>R</b> plays a rest (no sound).  The sequence parser is case-insensitive and ignore spaces, which may be used to format your music nicely.</p>
+        <p>Various control characters alter the sound:</p>
+        <ul>
+            <li><strong>&#8216;A&#8217; &#8211; &#8216;G&#8217;:</strong> used to specify the notes that will be played</li>
+            <li><strong>&#8216;R&#8217;:</strong> used to specify a rest (no sound for the duration of the note)</li>
+            <li><strong>&#8216;&gt;&#8217;</strong> plays the next note one octave higher</li>
+            <li><strong>&#8216;&lt;&#8217;</strong> plays the next note one octave lower</li>
+            <li><strong>&#8216;+&#8217;</strong> or <strong>&#8216;#&#8217;</strong> after a note raises any note one half-step</li>
+            <li><strong>&#8216;-&#8217;</strong> after a note lowers any note one half-step</li>
+            <li><strong>&#8216;.&#8217;</strong> after a note &#8220;dots&#8221; it, increasing the length by 50%.  Each additional dot adds half as much as the previous dot, so that &#8220;A..&#8221; is 1.75 times the length of &#8220;A&#8221;.</li>
+            <li><strong>&#8216;O&#8217;</strong> followed by a number sets the octave (default: <strong>O4</strong>).</li>
+            <li><strong>&#8216;T&#8217;</strong> followed by a number sets the tempo in beats/min (default: <strong>T120</strong>).</li>
+            <li><strong>&#8216;L&#8217;</strong> followed by a number sets the default note duration to the type specified by the number: 4 for quarter notes, 8 for eighth notes, 16 for sixteenth notes, etc. (default: <strong>L4</strong>).</li>
+            <li><strong>&#8216;V&#8217;</strong> followed by a number from 0-15 sets the music volume (default: <strong>V15</strong>).</li>
+            <li><strong>&#8216;MS&#8217;</strong> sets all subsequent notes to play play staccato &#8211; each note is played for 1/2 of its allotted time, followed by an equal period of silence.</li>
+            <li><strong>&#8216;ML&#8217;</strong> sets all subsequent notes to play legato &#8211; each note is played for full length.  This is the default setting.</li>
+            <li><strong>&#8216;!&#8217;</strong> resets the octave, tempo, duration, volume, and staccato setting to their default values. These settings persist from one play() to the next, which allows you to more conveniently break up your music into reusable sections.</li>
+            <li><strong>1-2000:</strong> when immediately following a note, a number determines the duration of the note.  For example, C16 specifies C played as a sixteenth note (1/16th the length of a whole note).</li>
+        </ul> 
+
+        You can study the "Music" example program to see how the play music block works.<br>
+
+        Like all Sound blocks, this block plays in the background and moves on to the next 
+        block immediately. If you wish to pause until the sound is finished, you should use the 
+        <a href="#threepi_is_music_playing">Is Music Playing Block</a> or the 
+        <a href="#threepi_wait_for_music">Wait For Music Block</a>. Any later
+        Sound block will override the previous blocks that might still be in effect.<br>
+
+
+        <h2 id="threepi_stop_music" >Stop Music Block</h2>
+        The Stop Music Block stops any sound that is currently playing in the speaker. 
+        If there is any music playing, it will be canceled.
+        <h2 id="threepi_is_music_playing" >Is Music Playing Block</h2>
+        The Is Music Playing Block lets you check to see if the music is playing. It will return a "True"
+        value if the music is playing, and a "False" value if it is not.
+        <h2 id="threepi_wait_for_music" >Wait For Music Block</h2>
+        The Wait for Music Block will pause the robot until the current sound 
+        and music is finished playing.
+        <h2 id="threepi_set_led" >Set LED Block</h2>
+        The Set LED Block Lets you control either of the two LED's on the 3Pi
+        robot. You can select either the "RED", "GREEN", "LEFT", or "RIGHT" LED's
+        and turn them on or off. The "RED" and "LEFT" refer to the same LED, and 
+        similarly "GREEN" and "RIGHT" refer to the same LED.<br>
+        The LEDs have 3 options for settings, "ON", "OFF", and "TOGGLE". "TOGGLE"
+        will set the LED to be the opposite setting of whatever its current setting is.
+
+        <h2 id="threepi_wait_for_button" >Wait For Button Block</h2>
+        The Wait For Button Block will pause the execution of the blocks until 
+        the specified button is pressed. <strong>This does not stop the motors or 
+            any music that is playing while it is waiting.</strong> 
+        <h4>Parameters</h4>
+        <ul>
+            <li> Button : Which button you want to wait for. Valid values are "A",
+                "B", "C", or "ANY". "ANY" will wait until any of the buttons are pressed. 
+                You won't know which button was pressed, if you want to know which button was pressed, 
+                use the <a href="#threepi_get_button_value">Get Button Value Block</a>.
+        </ul>
+
+        <h2 id="threepi_get_button_value" >Get Button Value Block</h2>
+        The Get Button Value Block can be used to check for a specific button being
+        pressed. This is helpful if you want the 3Pi to do different things when 
+        certain buttons are pressed. You can also use it to to help create a menu
+        for your robot.
+        <h4>Parameters</h4>
+        <ul>
+            <li> Button: Which button you want to test. Valid values are "A",
+                "B", and "C". 
+            <li> Wait: Set to "YES" if you want to wait until the button is pressed. If you select "YES", then
+                the block will wait until the button has been pressed, making it 
+                very similar to the <a href="#threepi_wait_for_button">Wait For Button Block</a>
+        </ul>
+
+        <h2 id="threepi_print_lcd_text" >Print LCD Text Block</h2>
+        The Print LCD Text Block will display text on the LCD screen of your robot.
+        You must attach a "Text" block containing the text to place on the 3Pi
+        The display is 2 lines of 8 characters each, so this block will only print
+        8 characters at a time. To print text at other locations, use the 
+        <a href="#threepi_goto_x_y">LCD Goto X Y Block</a>. 
+
+        <h2 id="threepi_print_lcd_number" >Print LCD Number Block</h2>
+        The Print LCD Number Block will display a number on the LCD screen of your robot.
+        You must attach a number block containing the number to display.
+        The display is 2 lines of 8 characters each, so this block will only print
+        8 characters at a time. To print text at other locations, use the 
+        <a href="#threepi_goto_x_y">LCD Goto X Y Block</a>. 
+
+        <h2 id="threepi_clear_lcd" >Clear LCD Block</h2>
+        The Clear LCD Block will clear the contents of the LCD screen and reset the 
+        location for the next print to the top-left position on the screen. It is a good idea
+        if your program uses the LCD to clear the screen on startup, so that leftover
+        text is not on the screen after a reset of the robot.
+
+        <h2 id="threepi_goto_x_y" >LCD Goto X Y Block</h2>
+        The Goto X Y Block sets the position of the next LCD print. 
+        <h4>Parameters</h4>
+        <ul>
+            <li> X: The left-right character position. Valid values are from 0 to 7, which 
+                correspond to character positions 1 through 8 on the LCD. Position "0"
+                is the left-most position, and position "7" is the right-most position.
+            <li> Y: The up-down position, or line number for the next print. Valid
+                values are "0" and "1". Position "0" is the top line, and position "1"
+                is the bottom line.
+        </ul>
+
+        <h2 id="threepi_get_trimpot" >Get Trimpot Block</h2>
+        The Get Trimpot Block gets the value of the user "Trimpot" or "Trimmer Potentiameter"
+        located on the bottom of the 3Pi. The result will be a value from 0 to 1024 depending on
+        how much the trimpot is turned. <strong><span class="warning">WARNING:</span></strong> Trimmers usually have a 
+        limited lifetime, and can wear out. They are usually intended for 'fine-tuning' adjustments, not
+        frequent changes.
+        For more information, see 
+        <a href='https://www.pololu.com/docs/0J17/2.c'>Pololu's documentation</a><br>
+
+        <h2 id="threepi_get_battery" >Get Battery Block</h2>
+        The Get Battery Block gets the voltage level of the 3Pi battery. This
+        is returned in "millivolts". A value of "5000" means that the batteries are producing 5 volts.
+        Rechargeable NiMH batteries are dead around 4 volts, so this can give you a 
+        good idea of how long the batteries will last. 
+
+        <h2 id="threepi_read_line_sensors">Read Line Sensors Block</h2>
+        The Read Line Sensors Block causes the 3Pi to take a reading on its 5 line sensors. The readings
+        are stored in memory, and you can then later check the readings with the 
+        <a href="#threepi_get_line_sensor_value">Get Line Sensor Value Block</a>. 
+        This block does a "raw" reading of the line sensors.
+        Light conditions in the room can effect the raw values. To get more consistent results,
+        you should consider using the 
+        <a href="#threepi_read_calibrated_line_sensors">Read Calibrated Line Sensors Block</a>.
+
+        <h2 id="threepi_get_line_sensor_value">Get Line Sensor Value Block</h2>
+        The Get Line Sensor Value Block returns sensor reading values that were recorded
+        using the <a href="#threepi_read_line_sensors">Read Line Sensors Block</a> or the 
+        <a href="#threepi_read_calibrated_line_sensors">Read Calibrated Line Sensors Block</a>.
+        <h4>Parameters</h4>
+        <ul>
+            <li> Sensor: Which sensor reading to get. Sensor "0" is the left-most sensor, and
+                "4" is the right-most sensor. 
+        </ul>
+        The actual value returned will depend on the "read" block used to collect the values. 
+        For "raw" readings, the returned value will generally vary between 0 and 2000. 
+        You will have to experiment with reading values to determine what the raw numbers mean,
+        and they can be affected by the lighting in the room.<br>
+        For "calibrated" readings, the result will vary from 0 to 1000, with "0" being
+        adjusted to the lowest reading seen during calibration, and "1000" being
+        adjusted to the highest reading seen during calibration. Each sensor is calibrated independently.
+
+        <h2 id="threepi_calibrate_line_sensors">Calibrate Line Sensors Block</h2>
+        Th Calibrate Line Sensors Block takes readings on the line sensors, and 
+        adjusts the calibration settings for all of the sensors. You should use
+        this block before using the 
+        <a href="#threepi_read_calibrated_line_sensors">Read Calibrated Line Sensors Block</a>.
+        You can use this block repeatedly to improve calibration, the results are
+        added up over time.
+
+        <h2 id="threepi_read_calibrated_line_sensors">Read Calibrated Line Sensors Block</h2>
+        The Read Calibrated Line Sensors Block is very similar to the 
+        <a href="#threepi_read_line_sensors">Read Line Sensors Block</a> except that 
+        it adjusts the readings to fall in the range from "0" to "1000" for readings
+        based on the internally stored calibration results.
+
+        <h2 id="threepi_read_line">Read Line Block</h2>
+        The Read Line Block works differently the the other "Read" lines sensor blocks.
+        This block takes a calibrated reading of the sensors (so you must make sure 
+        you calibrated first), and then returns a value that indicates where
+        a "line" is in relation to the robot. This is mainly useful for line following.
+        The return value for this block can range from "0" to "4000". A return value of "0"
+        means that the line is underneath sensor "0" (the left-most one). A return value 
+        of "4000" means that the line is underneath sensor "4" (the right-most one).
+        The value can vary anywhere in between this number to indicate that the line 
+        is somewhere in between the sensors. The 3Pi line sensor system also remembers that last
+        value the last time it detected a line. If the robot cannot find a line 
+        when this block runs, it returns the last good value.
+
+        <h4>Parameters</h4>
+        <ul>
+            <li>Line Color: What type of line to look for. If you are on a light surface with
+                and following a dark line, use "Black". If you are on a dark surface following  
+                a light line, use "White".
+        </ul>
+
+    </body>
+</html>

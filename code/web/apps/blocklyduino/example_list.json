@@ -1,0 +1,21 @@
+{
+	"examples" : 
+	[
+		{
+			"name" : "Blink",
+			"file" : "blink.xml",
+			"description" : "The most basic sample to blink the lights"
+		},
+		{
+			"name" : "Square",
+			"file" : "square.xml",
+			"description" : "Move the 3Pi in a square"
+		},
+		{
+			"name" : "Music",
+			"file" : "music.xml",
+			"description" : "Play some music"
+			
+		}
+	]
+}

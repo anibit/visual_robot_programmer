@@ -1,0 +1,125 @@
+
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Blockly Blocks</title>
+  <link rel="stylesheet" type="text/css" href="anibit_blockly.css">
+  <!--<script type="text/javascript" src="blockly_uncompressed.js"></script> -->
+  <script type="text/javascript" src="blockly_compressed.js"></script>
+  <script type="text/javascript" src="generators/arduino.js"></script>
+  <script type="text/javascript" src="generators/arduino/control.js"></script>
+  <script type="text/javascript" src="generators/arduino/logic.js"></script>
+  <script type="text/javascript" src="generators/arduino/math.js"></script>
+  <script type="text/javascript" src="generators/arduino/text.js"></script>
+  <script type="text/javascript" src="generators/arduino/lists.js"></script>
+  <script type="text/javascript" src="generators/arduino/variables.js"></script>
+  <script type="text/javascript" src="generators/arduino/procedures.js"></script> 
+  <script type="text/javascript" src="language/en/_messages.js"></script>
+  <script type="text/javascript" src="language/common/control.js"></script>
+  <script type="text/javascript" src="language/common/logic.js"></script>
+  <script type="text/javascript" src="language/common/math.js"></script>
+  <script type="text/javascript" src="language/common/text.js"></script>
+  <script type="text/javascript" src="language/common/lists.js"></script>
+  <script type="text/javascript" src="language/common/procedures.js"></script>
+  <script type="text/javascript" src="generators/arduino/base.js"></script>
+  <script type="text/javascript" src="generators/arduino/grove.js"></script>
+  <script type="text/javascript" src="generators/arduino/3pi.js"></script> 
+  <script type="text/javascript" src="generators/arduino/custom.js"></script>
+  
+  <style>
+    html, body {
+      background-color: #fff;
+      margin: 0;
+      padding:0;
+      overflow: hidden;
+    }
+    .blocklySvg {
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+  <script>
+    function init() {
+      // Whitelist of blocks to keep.
+      var newLanguage = {}
+      var keepers = [
+          //io
+          'inout_highlow',
+          'inout_digital_write', 'inout_digital_read',
+          'inout_analog_write', 'inout_analog_read',
+          'serial_print', 'inout_buildin_led',
+          //control
+          'base_delay', 'controls_if', 'controls_if_if', 'controls_if_elseif', 'controls_if_else', 'controls_for', 'controls_repeat', 
+          'controls_whileUntil', 'controls_flow_statements',
+          //math
+          'base_map','math_number','math_arithmetic',//'math_modulo',
+          //text
+          'text', //'text_join','text_create_join_container','text_create_join_item',
+          //logic
+          'logic_compare', 'logic_operation', 'logic_negate', 'logic_null',//'logic_boolean',
+          //variable
+          'variables_get','variables_set', 'variables_declare',
+          //procedure
+          'procedures_defnoreturn', 'procedures_defreturn', 'procedures_callnoreturn', 'procedures_callreturn', 'procedures_mutatorcontainer', 'procedures_mutatorarg',
+          'procedures_ifreturn',
+          //custom
+          //'custom_read','custom_write',
+	       //3pi
+	       'threepi_setup', 'threepi_set_motors', 'threepi_set_motor', 'threepi_play_tone', 'threepi_play_note', 'threepi_play_music', 
+	       'threepi_stop_music', 'threepi_is_music_playing', 'threepi_wait_for_music', 'threepi_set_led', 'threepi_wait_for_button', 
+	       'threepi_get_button_value', 'threepi_print_lcd_text', 'threepi_print_lcd_number','threepi_clear_lcd','threepi_goto_x_y',
+               'threepi_scroll_lcd', 'threepi_get_trimpot', 'threepi_get_battery', 'threepi_read_line_sensors', 'threepi_get_line_sensor_value',
+               'threepi_calibrate_line_sensors', 'threepi_read_calibrated_line_sensors', 'threepi_read_line'
+               //,'threepi_set_user_led'
+               
+          ];
+      for (var x = 0; x < keepers.length; x++) {
+        newLanguage[keepers[x]] = Blockly.Language[keepers[x]];
+      }
+      Blockly.Language = newLanguage;
+      
+      var enableAdvanced = false;
+      if (window.parent)
+      {     
+      	enableAdvanced = window.parent.document.getElementById("advanced_check").checked;
+      }
+      
+      Blockly.inject(document.body, {path: './', advanced: enableAdvanced }); 
+
+      if (window.parent.init) {
+        // Let the top-level application know that Blockly is ready.
+        window.parent.init(Blockly);
+      } else {
+        // Attempt to diagnose the problem.
+        var msg = 'Error: Unable to communicate between frames.\n\n';
+        if (window.parent == window) {
+          msg += 'Try loading index.html instead of frame.html';
+        } else if (window.location.protocol == 'file:') {
+          msg += 'This may be due to a security restriction preventing\n' +
+              'access when using the file:// protocol.\n' +
+              'http://code.google.com/p/chromium/issues/detail?id=47416';
+        }
+        alert(msg);
+      }
+      
+      try {
+      
+        var myEvent = new MessageEvent('isAppHosted',  
+            { 'view' : window, 
+                'bubbles' : true, 
+                'cancelable' : false, 
+                'data' : window.parent.toolVersion
+            }); 
+        document.dispatchEvent (myEvent);
+      }
+      catch (e) {
+        console.log("Could not query if we're running in hosted mode, "+
+                "which means this is probably running in a browser.");
+      }
+      
+    }
+  </script>
+</head>
+<body onload="init()">
+</body>
+</html>

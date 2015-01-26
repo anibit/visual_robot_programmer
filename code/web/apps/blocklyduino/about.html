@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+    <head >
+        <title>About...</title>
+        <link rel="stylesheet" type="text/css" href="anibit_blockly.css"/>
+        <meta charset="utf-8">
+    </head>
+    <body id="about_body" class="about_content" onresize="onResize()">
+
+
+        <div id="about_header" style="text-align: center; width: 100%;">
+            <span style="font-size: 150%"><strong>About...</strong></span>
+            <button onclick="closeAboutDialog();" style="float: right;">X</button>
+        </div>
+
+        <div id="about_scroll_content" style=" overflow-y: auto">
+            Version: <span id="version_span"></span><br>
+            The Anibit Graphical Programming Tool is provided free of charge by 
+            <a href="https://anibit.com" target="_blank">Anibit Technology, LLC.</a> <br>
+            <br>
+            This is released in hopes that people will find it useful for helping to
+            teach programming and robotics to beginners. <br>
+            <br>
+            <div class="hide_when_hosted">Do you run Windows? You can get a Windows version of this tool that makes 
+                working with the 3Pi easy easy as pushing a button, great for education and demos. 
+                <a href="https://anibit.com/3pi_programmer_windows" target="_blank"> Get it for free</a>! 
+                <br><br>
+                For a list of known bug and issues, please see 
+                <a href="known_issues.html" target="_blank">known issues</a>.
+            </div>
+            <br>
+            You may download the source to this application from 
+            <a href="https://github.com/anibit/visual_robot_programmer" target="_blank">GitHub</a>.<br>
+            <h3 style="color: #d43">Special Note to Educators, Hardware Manufacturers, Makers:</h3>
+            <strong>Anibit Technology is available for hire!</strong><br>
+            Do you run a class or training program? Do you manufacture an Arduino-like
+            device? If you are interested in a custom version of this application,
+            or a version tailored to your device or lesson plan, 
+            <a href="https://anibit.com/content/anibit-consulting-and-development" 
+               target="_blank">contact us</a>! <br> <br>
+               
+               <table>
+                   <tr>
+                       <td>
+                           Would you like new features? Why not sponsor development!
+                           &nbsp;&nbsp; 
+                           
+                       </td>
+                       <td>
+                   <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="DXBL3RF9PNXJU">
+<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+</form>
+                       </td>
+                   </tr>
+               </table>
+ 
+
+               
+            <h3>Credits and Thanks</h3>
+            This software is built upon a lot of work by a lot of talented groups,
+            including:<br>
+            <ul>
+                <li><a href="https://developers.google.com/blockly/" target="_blank">
+                        Blockly</a> - a general graphical programming environment for the web
+                <li><a href="https://github.com/gasolin/BlocklyDuino/wiki" target="_blank">
+                        Blocklyduino</a> - an adaptation of Blockly targeted toward 
+                    the Arduino
+                <li><a href="http://ai2.appinventor.mit.edu" target="_blank">
+                        MIT App Inventor 2</a> - A graphical web-based development environment for Android apps.
+                <li><a href="https://www.pololu.com/docs/0J17/5" target="_blank">
+                        Pololu's Arduino library for 3Pi</a> - Provided libraries 
+                    that are used to interact wit their 3Pi robot.
+                <li><a href="http://www.arduino.cc/" target="_blank">Arduino</a> - for creating the 
+                    platform and software that started it all!
+            </ul>
+        </div>
+        <script>
+            function closeAboutDialog() {
+                window.parent.closeAboutDialog();
+            }
+
+            
+            function layoutPage() {
+                var aboutBody = document.getElementById("about_body");
+                var aboutHeader = document.getElementById("about_header");
+                var aboutScrollContent = document.getElementById("about_scroll_content");
+                aboutScrollContent.style.height = 
+                        (aboutBody.clientHeight - aboutHeader.clientHeight) + "px";
+            }
+            
+            function onResize() {
+                layoutPage();
+            }
+            
+            (function (){
+                var versionElement = document.getElementById("version_span");
+                versionElement.innerHTML = " " +window.parent.parent.toolVersion;
+
+                layoutPage();
+            } )();
+        </script>
+    </body>
+</html>

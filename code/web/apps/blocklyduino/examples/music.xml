@@ -1,0 +1,131 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <block type="threepi_clear_lcd" x="16" y="13">
+    <next>
+      <block type="threepi_print_lcd_text" inline="false">
+        <value name="CONTENT">
+          <block type="text">
+            <title name="TEXT">Press B</title>
+          </block>
+        </value>
+        <next>
+          <block type="threepi_goto_x_y" inline="false">
+            <value name="X">
+              <block type="math_number">
+                <title name="NUM">0</title>
+              </block>
+            </value>
+            <value name="Y">
+              <block type="math_number">
+                <title name="NUM">1</title>
+              </block>
+            </value>
+            <next>
+              <block type="threepi_print_lcd_text" inline="false">
+                <value name="CONTENT">
+                  <block type="text">
+                    <title name="TEXT">Button</title>
+                  </block>
+                </value>
+                <next>
+                  <block type="threepi_wait_for_button">
+                    <title name="BUTTON">BUTTON_B</title>
+                    <next>
+                      <block type="threepi_clear_lcd">
+                        <next>
+                          <block type="threepi_print_lcd_text" inline="false">
+                            <value name="CONTENT">
+                              <block type="text">
+                                <title name="TEXT">Enjoy!</title>
+                              </block>
+                            </value>
+                            <next>
+                              <block type="threepi_play_music">
+                                <title name="MUSIC_STRING">! O5 L16 agafaea dac+adaea fa&lt;aa&lt;bac#a dac#adaea f</title>
+                                <next>
+                                  <block type="threepi_wait_for_music">
+                                    <next>
+                                      <block type="threepi_play_music">
+                                        <title name="MUSIC_STRING">O6 dcd&lt;b-d&lt;ad&lt;g d&lt;f+d&lt;gd&lt;ad&lt;b- d&lt;dd&lt;ed&lt;f+d&lt;g d&lt;f+d&lt;gd&lt;ad</title>
+                                        <next>
+                                          <block type="threepi_wait_for_music">
+                                            <next>
+                                              <block type="threepi_play_music">
+                                                <title name="MUSIC_STRING">L8 MS &lt;b-d&lt;b-d MLe-&lt;ge-&lt;g MSc&lt;ac&lt;a ML d&lt;fd&lt;f O5 MS b-gb-g</title>
+                                                <next>
+                                                  <block type="threepi_wait_for_music">
+                                                    <next>
+                                                      <block type="threepi_play_music">
+                                                        <title name="MUSIC_STRING">ML &gt;c#e&gt;c#e MS afaf ML gc#gc# MS fdfd ML e&lt;b-e&lt;b-</title>
+                                                        <next>
+                                                          <block type="threepi_wait_for_music">
+                                                            <next>
+                                                              <block type="threepi_play_music">
+                                                                <title name="MUSIC_STRING">O6 L16ragafaea dac#adaea fa&lt;aa&lt;bac#a dac#adaea faeadaca</title>
+                                                                <next>
+                                                                  <block type="threepi_wait_for_music">
+                                                                    <next>
+                                                                      <block type="threepi_play_music">
+                                                                        <title name="MUSIC_STRING">&lt;b-acadg&lt;b-g egdgcg&lt;b-g &lt;ag&lt;b-gcf&lt;af dfcf&lt;b-f&lt;af</title>
+                                                                        <next>
+                                                                          <block type="threepi_wait_for_music">
+                                                                            <next>
+                                                                              <block type="threepi_play_music">
+                                                                                <title name="MUSIC_STRING">&lt;gf&lt;af&lt;b-e&lt;ge c#e&lt;b-e&lt;ae&lt;ge &lt;fe&lt;ge&lt;ad&lt;fd</title>
+                                                                                <next>
+                                                                                  <block type="threepi_wait_for_music">
+                                                                                    <next>
+                                                                                      <block type="threepi_play_music">
+                                                                                        <title name="MUSIC_STRING">O5 e&gt;ee&gt;ef&gt;df&gt;d b-&gt;c#b-&gt;c#a&gt;df&gt;d e&gt;ee&gt;ef&gt;df&gt;d</title>
+                                                                                        <next>
+                                                                                          <block type="threepi_wait_for_music">
+                                                                                            <next>
+                                                                                              <block type="threepi_play_music">
+                                                                                                <title name="MUSIC_STRING">e&gt;d&gt;c#&gt;db&gt;d&gt;c#b &gt;c#agaegfe f O6 dc#dfdc#&lt;b c#4</title>
+                                                                                              </block>
+                                                                                            </next>
+                                                                                          </block>
+                                                                                        </next>
+                                                                                      </block>
+                                                                                    </next>
+                                                                                  </block>
+                                                                                </next>
+                                                                              </block>
+                                                                            </next>
+                                                                          </block>
+                                                                        </next>
+                                                                      </block>
+                                                                    </next>
+                                                                  </block>
+                                                                </next>
+                                                              </block>
+                                                            </next>
+                                                          </block>
+                                                        </next>
+                                                      </block>
+                                                    </next>
+                                                  </block>
+                                                </next>
+                                              </block>
+                                            </next>
+                                          </block>
+                                        </next>
+                                      </block>
+                                    </next>
+                                  </block>
+                                </next>
+                              </block>
+                            </next>
+                          </block>
+                        </next>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </next>
+  </block>
+</xml>
