@@ -180,7 +180,9 @@ Blockly.Xml.domToPrettyText = function(dom) {
  * @return {!Element} A tree of XML elements.
  */
 Blockly.Xml.textToDom = function(text) {
+  console.log(text);
   var oParser = new DOMParser();
+  console.log("got a parser");
   var dom = oParser.parseFromString(text, 'text/xml');
   // The DOM should have one and only one top-level node, an XML tag.
   if (!dom || !dom.firstChild ||
@@ -189,6 +191,8 @@ Blockly.Xml.textToDom = function(text) {
     // Whatever we got back from the parser is not XML.
     throw 'Blockly.Xml.textToDom did not obtain a valid XML tree.';
   }
+  console.log("done parsing XML");
+          
   return dom.firstChild;
 };
 

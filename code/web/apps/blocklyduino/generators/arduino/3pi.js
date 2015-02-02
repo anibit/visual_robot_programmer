@@ -669,7 +669,7 @@ Blockly.Arduino.threepi_get_battery = function () {
     Blockly.Arduino.definitions_['define_orangutananalog'] = 'OrangutanAnalog analog;\n';
     Blockly.Arduino.setups_['setup_3pi'] = 'Pololu3pi::init();\n';
     Blockly.Arduino.setups_['setup_orangutananalog'] = 'analog.setMode(MODE_10_BIT);\n';
-    var code = "(analog.readBatteryMillivolts_3pi)";
+    var code = "(analog.readBatteryMillivolts_3pi())";
     return [code, Blockly.Arduino.ORDER_ATOMIC]
 };
 
