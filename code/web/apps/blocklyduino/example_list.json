@@ -16,6 +16,12 @@
 			"file" : "music.xml",
 			"description" : "Play some music"
 			
+		},
+		{
+			"name" : "Line Follower",
+			"file" : "simple_line_follow.xml",
+			"description" : "Simple line follower"
+			
 		}
 	]
 }

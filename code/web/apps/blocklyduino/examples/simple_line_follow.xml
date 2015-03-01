@@ -1,0 +1,456 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <block type="variables_declare" inline="false" x="-373" y="-250">
+    <title name="VAR">line value</title>
+    <title name="TYPE">int</title>
+    <next>
+      <block type="variables_declare" inline="false">
+        <title name="VAR">speed</title>
+        <title name="TYPE">int</title>
+        <value name="VALUE">
+          <block type="math_number">
+            <title name="NUM">130</title>
+          </block>
+        </value>
+      </block>
+    </next>
+  </block>
+  <block type="threepi_clear_lcd" x="-374" y="-164">
+    <next>
+      <block type="threepi_print_lcd_text" inline="false">
+        <value name="CONTENT">
+          <block type="text">
+            <title name="TEXT">Hit Any</title>
+          </block>
+        </value>
+        <next>
+          <block type="threepi_goto_x_y" inline="false">
+            <value name="X">
+              <block type="math_number">
+                <title name="NUM">0</title>
+              </block>
+            </value>
+            <value name="Y">
+              <block type="math_number">
+                <title name="NUM">1</title>
+              </block>
+            </value>
+            <next>
+              <block type="threepi_print_lcd_text" inline="false">
+                <value name="CONTENT">
+                  <block type="text">
+                    <title name="TEXT">Button</title>
+                  </block>
+                </value>
+                <next>
+                  <block type="threepi_wait_for_button">
+                    <title name="BUTTON">ANY_BUTTON</title>
+                    <next>
+                      <block type="procedures_callnoreturn">
+                        <mutation name="calibrate sensor"></mutation>
+                        <next>
+                          <block type="threepi_set_motors" inline="false">
+                            <value name="LEFT_POWER">
+                              <block type="math_number">
+                                <title name="NUM">100</title>
+                              </block>
+                            </value>
+                            <value name="RIGHT_POWER">
+                              <block type="math_number">
+                                <title name="NUM">100</title>
+                              </block>
+                            </value>
+                            <next>
+                              <block type="controls_whileUntil" inline="false">
+                                <title name="MODE">UNTIL</title>
+                                <value name="BOOL">
+                                  <block type="logic_null"></block>
+                                </value>
+                                <statement name="DO">
+                                  <block type="variables_set" inline="false">
+                                    <title name="VAR">line value</title>
+                                    <value name="VALUE">
+                                      <block type="threepi_read_line">
+                                        <title name="LINE_COLOR">0</title>
+                                      </block>
+                                    </value>
+                                    <next>
+                                      <block type="threepi_clear_lcd">
+                                        <next>
+                                          <block type="threepi_print_lcd_number" inline="false">
+                                            <value name="CONTENT">
+                                              <block type="variables_get">
+                                                <title name="VAR">line value</title>
+                                              </block>
+                                            </value>
+                                            <next>
+                                              <block type="controls_if" inline="false">
+                                                <mutation else="1"></mutation>
+                                                <value name="IF0">
+                                                  <block type="logic_compare" inline="true">
+                                                    <title name="OP">LT</title>
+                                                    <value name="A">
+                                                      <block type="variables_get">
+                                                        <title name="VAR">line value</title>
+                                                      </block>
+                                                    </value>
+                                                    <value name="B">
+                                                      <block type="math_number">
+                                                        <title name="NUM">2000</title>
+                                                      </block>
+                                                    </value>
+                                                  </block>
+                                                </value>
+                                                <statement name="DO0">
+                                                  <block type="threepi_set_motors" inline="false">
+                                                    <value name="LEFT_POWER">
+                                                      <block type="threepi_interpolate_range" inline="false" collapsed="true">
+                                                        <value name="IN_VAL">
+                                                          <block type="variables_get">
+                                                            <title name="VAR">line value</title>
+                                                          </block>
+                                                        </value>
+                                                        <value name="X1">
+                                                          <block type="math_number">
+                                                            <title name="NUM">2000</title>
+                                                          </block>
+                                                        </value>
+                                                        <value name="X2">
+                                                          <block type="math_number">
+                                                            <title name="NUM">0</title>
+                                                          </block>
+                                                        </value>
+                                                        <value name="Y1">
+                                                          <block type="variables_get">
+                                                            <title name="VAR">speed</title>
+                                                          </block>
+                                                        </value>
+                                                        <value name="Y2">
+                                                          <block type="math_arithmetic" inline="true">
+                                                            <title name="OP">MULTIPLY</title>
+                                                            <value name="A">
+                                                              <block type="math_number">
+                                                                <title name="NUM">-1</title>
+                                                              </block>
+                                                            </value>
+                                                            <value name="B">
+                                                              <block type="variables_get">
+                                                                <title name="VAR">speed</title>
+                                                              </block>
+                                                            </value>
+                                                          </block>
+                                                        </value>
+                                                      </block>
+                                                    </value>
+                                                    <value name="RIGHT_POWER">
+                                                      <block type="variables_get">
+                                                        <title name="VAR">speed</title>
+                                                      </block>
+                                                    </value>
+                                                    <next>
+                                                      <block type="threepi_set_led">
+                                                        <title name="LED">left</title>
+                                                        <title name="STATE">LOW</title>
+                                                        <next>
+                                                          <block type="threepi_set_led">
+                                                            <title name="LED">right</title>
+                                                            <title name="STATE">HIGH</title>
+                                                          </block>
+                                                        </next>
+                                                      </block>
+                                                    </next>
+                                                  </block>
+                                                </statement>
+                                                <statement name="ELSE">
+                                                  <block type="threepi_set_motors" inline="false">
+                                                    <value name="LEFT_POWER">
+                                                      <block type="variables_get">
+                                                        <title name="VAR">speed</title>
+                                                      </block>
+                                                    </value>
+                                                    <value name="RIGHT_POWER">
+                                                      <block type="threepi_interpolate_range" inline="false" collapsed="true">
+                                                        <value name="IN_VAL">
+                                                          <block type="variables_get">
+                                                            <title name="VAR">line value</title>
+                                                          </block>
+                                                        </value>
+                                                        <value name="X1">
+                                                          <block type="math_number">
+                                                            <title name="NUM">2000</title>
+                                                          </block>
+                                                        </value>
+                                                        <value name="X2">
+                                                          <block type="math_number">
+                                                            <title name="NUM">4000</title>
+                                                          </block>
+                                                        </value>
+                                                        <value name="Y1">
+                                                          <block type="variables_get">
+                                                            <title name="VAR">speed</title>
+                                                          </block>
+                                                        </value>
+                                                        <value name="Y2">
+                                                          <block type="math_arithmetic" inline="true">
+                                                            <title name="OP">MULTIPLY</title>
+                                                            <value name="A">
+                                                              <block type="math_number">
+                                                                <title name="NUM">-1</title>
+                                                              </block>
+                                                            </value>
+                                                            <value name="B">
+                                                              <block type="variables_get">
+                                                                <title name="VAR">speed</title>
+                                                              </block>
+                                                            </value>
+                                                          </block>
+                                                        </value>
+                                                      </block>
+                                                    </value>
+                                                    <next>
+                                                      <block type="threepi_set_led">
+                                                        <title name="LED">left</title>
+                                                        <title name="STATE">HIGH</title>
+                                                        <next>
+                                                          <block type="threepi_set_led">
+                                                            <title name="LED">right</title>
+                                                            <title name="STATE">LOW</title>
+                                                          </block>
+                                                        </next>
+                                                      </block>
+                                                    </next>
+                                                  </block>
+                                                </statement>
+                                              </block>
+                                            </next>
+                                          </block>
+                                        </next>
+                                      </block>
+                                    </next>
+                                  </block>
+                                </statement>
+                              </block>
+                            </next>
+                          </block>
+                        </next>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </next>
+  </block>
+  <block type="threepi_setup" x="-5" y="-257">
+    <statement name="DO">
+      <block type="procedures_callnoreturn">
+        <mutation name="check battery"></mutation>
+        <next>
+          <block type="threepi_play_note" inline="false">
+            <title name="NOTE">F</title>
+            <title name="OCTAVE">6</title>
+            <value name="DURATION">
+              <block type="math_number">
+                <title name="NUM">250</title>
+              </block>
+            </value>
+            <value name="VOLUME">
+              <block type="math_number">
+                <title name="NUM">15</title>
+              </block>
+            </value>
+          </block>
+        </next>
+      </block>
+    </statement>
+  </block>
+  <block type="procedures_defnoreturn" x="34" y="-101">
+    <mutation></mutation>
+    <title name="NAME">check battery</title>
+    <statement name="STACK">
+      <block type="controls_if" inline="false">
+        <value name="IF0">
+          <block type="logic_compare" inline="true">
+            <title name="OP">LT</title>
+            <value name="A">
+              <block type="threepi_get_battery"></block>
+            </value>
+            <value name="B">
+              <block type="math_number">
+                <title name="NUM">4200</title>
+              </block>
+            </value>
+          </block>
+        </value>
+        <statement name="DO0">
+          <block type="threepi_clear_lcd">
+            <next>
+              <block type="threepi_print_lcd_text" inline="false">
+                <value name="CONTENT">
+                  <block type="text">
+                    <title name="TEXT">LOW BATT</title>
+                  </block>
+                </value>
+                <next>
+                  <block type="controls_repeat">
+                    <title name="TIMES">4</title>
+                    <statement name="DO">
+                      <block type="threepi_play_note" inline="false">
+                        <title name="NOTE">C</title>
+                        <title name="OCTAVE">3</title>
+                        <value name="DURATION">
+                          <block type="math_number">
+                            <title name="NUM">250</title>
+                          </block>
+                        </value>
+                        <value name="VOLUME">
+                          <block type="math_number">
+                            <title name="NUM">15</title>
+                          </block>
+                        </value>
+                        <next>
+                          <block type="base_delay" inline="true">
+                            <value name="DELAY_TIME">
+                              <block type="math_number">
+                                <title name="NUM">500</title>
+                              </block>
+                            </value>
+                          </block>
+                        </next>
+                      </block>
+                    </statement>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </statement>
+      </block>
+    </statement>
+  </block>
+  <block type="procedures_defnoreturn" x="470" y="-248">
+    <mutation></mutation>
+    <title name="NAME">calibrate sensor</title>
+    <statement name="STACK">
+      <block type="base_delay" inline="true">
+        <value name="DELAY_TIME">
+          <block type="math_number">
+            <title name="NUM">1000</title>
+          </block>
+        </value>
+        <next>
+          <block type="controls_for" inline="true">
+            <title name="VAR">i</title>
+            <value name="FROM">
+              <block type="math_number">
+                <title name="NUM">0</title>
+              </block>
+            </value>
+            <value name="TO">
+              <block type="math_number">
+                <title name="NUM">80</title>
+              </block>
+            </value>
+            <statement name="DO">
+              <block type="controls_if" inline="false">
+                <mutation else="1"></mutation>
+                <value name="IF0">
+                  <block type="logic_operation" inline="true">
+                    <title name="OP">OR</title>
+                    <value name="A">
+                      <block type="logic_compare" inline="true">
+                        <title name="OP">LT</title>
+                        <value name="A">
+                          <block type="variables_get">
+                            <title name="VAR">i</title>
+                          </block>
+                        </value>
+                        <value name="B">
+                          <block type="math_number">
+                            <title name="NUM">20</title>
+                          </block>
+                        </value>
+                      </block>
+                    </value>
+                    <value name="B">
+                      <block type="logic_compare" inline="true">
+                        <title name="OP">GTE</title>
+                        <value name="A">
+                          <block type="variables_get">
+                            <title name="VAR">i</title>
+                          </block>
+                        </value>
+                        <value name="B">
+                          <block type="math_number">
+                            <title name="NUM">60</title>
+                          </block>
+                        </value>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+                <statement name="DO0">
+                  <block type="threepi_set_motors" inline="false">
+                    <value name="LEFT_POWER">
+                      <block type="math_number">
+                        <title name="NUM">40</title>
+                      </block>
+                    </value>
+                    <value name="RIGHT_POWER">
+                      <block type="math_number">
+                        <title name="NUM">-40</title>
+                      </block>
+                    </value>
+                  </block>
+                </statement>
+                <statement name="ELSE">
+                  <block type="threepi_set_motors" inline="false">
+                    <value name="LEFT_POWER">
+                      <block type="math_number">
+                        <title name="NUM">-40</title>
+                      </block>
+                    </value>
+                    <value name="RIGHT_POWER">
+                      <block type="math_number">
+                        <title name="NUM">40</title>
+                      </block>
+                    </value>
+                  </block>
+                </statement>
+                <next>
+                  <block type="threepi_calibrate_line_sensors">
+                    <next>
+                      <block type="base_delay" inline="true">
+                        <value name="DELAY_TIME">
+                          <block type="math_number">
+                            <title name="NUM">20</title>
+                          </block>
+                        </value>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </statement>
+            <next>
+              <block type="threepi_set_motors" inline="false">
+                <value name="LEFT_POWER">
+                  <block type="math_number">
+                    <title name="NUM">0</title>
+                  </block>
+                </value>
+                <value name="RIGHT_POWER">
+                  <block type="math_number">
+                    <title name="NUM">0</title>
+                  </block>
+                </value>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </statement>
+  </block>
+</xml>

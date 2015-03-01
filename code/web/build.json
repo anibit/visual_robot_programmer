@@ -55,6 +55,8 @@
         "examples/blink.xml",
         "examples/music.xml",
         "examples/square.xml",
-        "help/blocks.html"
+	"examples/simple_line_follow.xml",
+        "help/blocks.html",
+	"winversion.xml"
     ]
 }

@@ -46,6 +46,10 @@ media/quote1.png
 media/handopen.cur
 media/handclosed.cur
 
+examples/blink.xml
+examples/music.xml
+examples/square.xml
+examples/simple_line_follow.xml
 
 NETWORK:
 *

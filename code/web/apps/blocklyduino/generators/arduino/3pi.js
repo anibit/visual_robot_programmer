@@ -62,7 +62,7 @@ Blockly.Language.threepi_set_motors = {
     init: function () {
         this.setColour(334);
         this.appendDummyInput("")
-                .appendTitle("Set Motors")
+                .appendTitle("Set Motors");
         this.appendValueInput("LEFT_POWER", Number)
                 .setCheck(Number)
                 .setAlign(Blockly.ALIGN_RIGHT)
@@ -417,9 +417,9 @@ Blockly.Arduino.threepi_get_button_value = function () {
     Blockly.Arduino.definitions_['define_orangutanpushbuttons'] = 'OrangutanPushbuttons buttons;\n';
     var code = "#error"
     if (dropdown_wait === 'true') {
-        code = "(buttons.waitForPress(" + dropdown_button + ") & " + dropdown_button + " == " + dropdown_button + ")";
+        code = "((buttons.waitForPress(" + dropdown_button + ") & " + dropdown_button + ") == " + dropdown_button + ")";
     } else {
-        code = "(buttons.isPressed(" + dropdown_button + ") & " + dropdown_button + " == " + dropdown_button + ")";
+        code = "((buttons.isPressed(" + dropdown_button + ") & " + dropdown_button + ") == " + dropdown_button + ")";
     }
     return [code, Blockly.Arduino.ORDER_ATOMIC]
 };
@@ -819,3 +819,63 @@ Blockly.Arduino.threepi_read_line = function () {
     return [code, Blockly.Arduino.ORDER_ATOMIC]
 };
 
+//TODO put this in a more "general" place in the code
+
+//Block Interpolate - maps a value form one range to another
+
+Blockly.Language.threepi_interpolate_range = {
+    category: 'Math - Advanced',
+    helpUrl: 'http://en.wikipedia.org/wiki/Linear_interpolation',
+    isAdvanced: true,
+    init: function () {
+        this.setColour(230);
+        this.appendValueInput('IN_VAL', Number)
+            .setCheck(Number)
+            .setAlign(Blockly.ALIGN_RIGHT)
+            .appendTitle("Interpolate ");
+        this.appendDummyInput("")
+            .appendTitle("in range")
+            .setAlign(Blockly.ALIGN_LEFT);
+        this.appendValueInput('X1', Number)
+            .setCheck(Number)
+            .setAlign(Blockly.ALIGN_RIGHT)
+            .appendTitle("from: ");
+        this.appendValueInput('X2', Number)
+            .setCheck(Number)
+            .setAlign(Blockly.ALIGN_RIGHT)    
+            .appendTitle(" to: ");
+    
+        this.appendDummyInput("")
+            .appendTitle("into range")
+            .setAlign(Blockly.ALIGN_LEFT);
+       this.appendValueInput('Y1', Number)
+            .setCheck(Number)
+            .setAlign(Blockly.ALIGN_RIGHT)
+            .appendTitle("from: ");
+    
+        this.appendValueInput('Y2', Number)
+            .setCheck(Number)
+            .setAlign(Blockly.ALIGN_RIGHT)
+            .appendTitle(" to: ");
+    
+        this.setTooltip('Maps an input from one range to another');
+        this.setOutput(true, Number);
+    }
+};
+
+Blockly.Arduino.threepi_interpolate_range = function () {
+    var in_val = Blockly.Arduino.valueToCode(this, 'IN_VAL', Blockly.Arduino.ORDER_UNARY_POSTFIX);
+    var x1 = Blockly.Arduino.valueToCode(this, 'X1', Blockly.Arduino.ORDER_UNARY_POSTFIX);
+    var x2 = Blockly.Arduino.valueToCode(this, 'X2', Blockly.Arduino.ORDER_UNARY_POSTFIX);
+    var y1 = Blockly.Arduino.valueToCode(this, 'Y1', Blockly.Arduino.ORDER_UNARY_POSTFIX);
+    var y2 = Blockly.Arduino.valueToCode(this, 'Y2', Blockly.Arduino.ORDER_UNARY_POSTFIX);
+    Blockly.Arduino.definitions_['define_int_interpolate'] = 'int int_interpolate(const int& in_val, const int& x1, const int& x2, ' + 
+           ' const int& y1, const int& y2)\n' +
+           '{\n' +
+           '    return (int)(((long(y2 - y1)) * long(in_val - x1))/(long(x2-x1)) + (long) y1);\n' +
+           '}\n'
+   ;
+    //(y2-y1)/(x2-x1) * (in_var - x1) + y1
+    var code = "( int_interpolate( " + in_val + ", " + x1 + ", " + x2 + ", " + y1 + ", " + y2 + "))";
+    return [code, Blockly.Arduino.ORDER_ATOMIC]
+}
