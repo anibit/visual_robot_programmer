@@ -1,0 +1,58 @@
+﻿<Window x:Class="Blockly3PiHost.UploadingWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="UploadingWindow" Height="150" Width="600" WindowStyle="None" ShowInTaskbar="False" AllowsTransparency="True" Background="Transparent">
+    <Border BorderBrush="Gray" BorderThickness="2,2,2,2" CornerRadius="1" Background="#ccD3D3D3">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Image Width="100"  Height="100"  x:Name="BlocksImage" Stretch="UniformToFill"  StretchDirection="DownOnly" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="15" >
+					<Image.LayoutTransform>
+						<TransformGroup>
+                            <ScaleTransform x:Name="scale" ScaleX="{Binding RelativeSource={RelativeSource Self}, Path=ScaleY}"/>
+							
+						</TransformGroup>
+					</Image.LayoutTransform>
+                    <Image.RenderTransform>
+                        <TransformGroup>
+                            <TranslateTransform x:Name="translate" />
+                        </TransformGroup>
+                    </Image.RenderTransform>
+                    <Image.Triggers>
+                        <EventTrigger RoutedEvent="Image.Loaded">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation 
+                                            Storyboard.TargetName="translate"
+                                            Storyboard.TargetProperty="X"
+                                            From="0" To="525" Duration="0:0:1.5" RepeatBehavior="Forever"
+                                            />
+                                    <DoubleAnimation
+                                            Storyboard.TargetName="scale"
+                                            Storyboard.TargetProperty="ScaleY"
+                                            From="1" To="0.25" Duration="0:0:1.5" RepeatBehavior="Forever"
+                                            />
+                                    <DoubleAnimation 
+                                            Storyboard.TargetName="BlocksImage"
+                                            Storyboard.TargetProperty="Opacity"
+                                            From="1" To="0.25" Duration="0:0:1.5" RepeatBehavior="Forever"
+                                        />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Image.Triggers>
+                </Image>
+                <Image Grid.Column="1" Width="100" Height="100" Source="big_3pi.png"  Stretch="Fill" StretchDirection="DownOnly" Margin="15"/>
+
+            </Grid>
+        </Grid>
+
+    </Border>
+</Window>
