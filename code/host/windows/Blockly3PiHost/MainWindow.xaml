@@ -155,7 +155,7 @@
                 
                 <Grid Grid.Column="1">
                     <Button ToolTip="Open in Arduino Environment" Click="OpenInIDE_Click">
-                        <Image Source="arduino_logo.png" MaxHeight="15"/>
+                        <Image Source="ide-image.png" MaxHeight="15"/>
                     </Button>
                 </Grid>
                 <Grid Grid.Column="2">

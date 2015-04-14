@@ -17,7 +17,7 @@ namespace Blockly3PiHost.RemoteLaunch
             public string ErrorOutput;
         }
 
-        public LaunchResult Launch(string command, string parameters, string workingDir)
+        public LaunchResult Launch(string command, string parameters, string workingDir, bool waitOnProcess)
         {
             ProcessStartInfo info = new ProcessStartInfo()
             {
@@ -38,14 +38,20 @@ namespace Blockly3PiHost.RemoteLaunch
 
             proc.Start();
 
-            proc.WaitForExit();
+            if (waitOnProcess)
+            {
+                proc.WaitForExit();
+                string output = proc.StandardOutput.ReadToEnd();
+                string errorText = proc.StandardError.ReadToEnd();
 
-            string output = proc.StandardOutput.ReadToEnd();
-            string errorText = proc.StandardError.ReadToEnd();
-
-
-            int result = proc.ExitCode;
-            return new LaunchResult() { ResultCode = result, Output = output, ErrorOutput = errorText };
+            
+                int result = proc.ExitCode;
+                return new LaunchResult() { ResultCode = result, Output = output, ErrorOutput = errorText };
+            }
+            else
+            {
+                return new LaunchResult() { };
+            }
         }
 
         public void Quit()

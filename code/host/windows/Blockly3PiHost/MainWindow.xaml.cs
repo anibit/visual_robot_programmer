@@ -165,7 +165,7 @@ namespace Blockly3PiHost
             //essentially, it attaches a reference to this window to the static dependency property, which prevents garbage collection. If this were a helper window,
             //we'd have to wrap this in a weak reference. 
             descriptor.AddValueChanged(this, delegate {
-                ProgrammerInfo[] programmers = GetProgrammers(ArduinoPath).ToArray();
+                ProgrammerInfo[] programmers = GetAllProgrammers(ArduinoPath).ToArray();
                 ProgrammerInfo oldSelectedProgrammer = SelectedProgrammer;
                 Programmers = programmers;
                 SelectedProgrammer = oldSelectedProgrammer != null ? Programmers.FirstOrDefault(p => p.Name == oldSelectedProgrammer.Name) : null;
@@ -311,7 +311,7 @@ namespace Blockly3PiHost
                 CheckForUpdates();
             }
             //Temp
-            ProgrammerInfo[] programmers = GetProgrammers(Settings.Default.ArduinoPath).ToArray();
+            ProgrammerInfo[] programmers = GetAllProgrammers(Settings.Default.ArduinoPath).ToArray();
             Programmers = programmers;
             string[] ports = SerialPort.GetPortNames();
             ProgrammerPorts = ports;
@@ -637,6 +637,7 @@ namespace Blockly3PiHost
             string args = "";
             if (upload)
             {
+                string boardQualifiedName = GetBoardQualifiedName(arduinoCommand, "orangutan_328");
                 //For some reason, the Arduino launch4j app REFUSES to do anything when the no-splash parameter is called.
                 //I've wasted too many hours trying to crack this, so I'm just going to live with the stupid splash screen for now.
                 //args += "--l4j-no-splash ";
@@ -651,16 +652,17 @@ namespace Blockly3PiHost
                 //end hack
                 string port = Dispatcher.Invoke(() => SelectedPort);
                 string programmer = Dispatcher.Invoke(() => SelectedProgrammer != null ? SelectedProgrammer.Name : "unknown");
-                args += string.Format("--board arduino:avr:orangutan328pgm --upload --port {0} --pref build.path={1} --pref programmer=arduino:{2}  ",
-                    port, IOPath.GetFullPath(makeBuildRoot), programmer);
+                args += string.Format("--board {0} --upload --port {1} --pref build.path={2} --pref programmer={3}  ",
+                    boardQualifiedName, port, IOPath.GetFullPath(makeBuildRoot), programmer);
             }
             
             args = args + new FileInfo(inoFilePath).FullName;
-                
-            var result = (Application.Current as App).Launcher.Launch(arduinoCommand, args, workingDir);
+            bool waitOnProcess = upload;
+            var result = (Application.Current as App).Launcher.Launch(arduinoCommand, args, workingDir, waitOnProcess);
             errorText = result.ErrorOutput;
             return result.ResultCode == 0 && ! (errorText != null && (errorText.Contains("error") || errorText.Contains("fail") ));
         }
+
 
 
         private void IDE_Browse_Click(object sender, RoutedEventArgs e)
@@ -780,9 +782,29 @@ namespace Blockly3PiHost
 
         }
 
-        IEnumerable<ProgrammerInfo> GetProgrammers(string arduinoIDEPath)
+        IEnumerable<ProgrammerInfo> GetAllProgrammers(string arduinoIDEPath)
         {
-            string programmersFile = GetProgrammersTextPath(arduinoIDEPath);
+            string programmersFile = GetCommonProgrammersTextPath(arduinoIDEPath);
+
+            foreach ( var progInfo in GetProgrammersFromFile(programmersFile) )
+            {
+                yield return progInfo;
+            }
+
+            IEnumerable<string> userProgrammersFiles = GetUserProgrammersFiles();
+            
+            foreach (var file in userProgrammersFiles)
+            {
+                foreach ( var progInfo in GetProgrammersFromFile(file))
+                {
+                    yield return progInfo;
+                }
+            }
+        }
+
+
+        static List<ProgrammerInfo> GetProgrammersFromFile(string programmersFile)
+        {
             List<ProgrammerInfo> retVal = new List<ProgrammerInfo>();
             List<string> lines = new List<string>();
             try
@@ -799,10 +821,10 @@ namespace Blockly3PiHost
                 var meaningfulLines = (from l in lines where l.Length > 0 && l[0] != '#' select l);
 
                 var programmerLines = (from l in
-                                     meaningfulLines
-                                 let index = l.IndexOf('.')
-                                 where index > 0
-                                 select l.Substring(0, index)).Distinct();
+                                           meaningfulLines
+                                       let index = l.IndexOf('.')
+                                       where index > 0
+                                       select l.Substring(0, index)).Distinct();
 
                 foreach (string programmerLine in programmerLines)
                 {
@@ -822,11 +844,10 @@ namespace Blockly3PiHost
                 Trace.WriteLine("Crash! " + e.ToString());
             }
             return retVal;
-            
         }
 
 
-        string GetProgrammersTextPath(string arduinoExePath)
+        string GetCommonProgrammersTextPath(string arduinoExePath)
         {
             if (!string.IsNullOrWhiteSpace(arduinoExePath))
             {
@@ -853,6 +874,128 @@ namespace Blockly3PiHost
         }
 
 
+        IEnumerable<string> GetUserProgrammersFiles()
+        {
+            string sketchbookLocation = GetUserSketchbookLocation();
+            if (!string.IsNullOrWhiteSpace(sketchbookLocation))
+            {
+                var hardwareLocaiton = IOPath.Combine(sketchbookLocation, "hardware");
+                DirectoryInfo di = new DirectoryInfo(sketchbookLocation);
+
+
+                foreach (var name in di.EnumerateFiles("programmers.txt", SearchOption.AllDirectories).Select(f => f.FullName))
+                {
+                    yield return name;
+                }
+
+            }
+
+        }
+
+
+        string GetBoardQualifiedName(string arduinoIDEPath, string boardName)
+        {
+            var boardPath = FindBoardFilePath(arduinoIDEPath, boardName);
+
+            if (!string.IsNullOrWhiteSpace(boardPath))
+            {
+                var pathInfo = new FileInfo(boardPath);
+                string archName = pathInfo.Directory.Name;
+                string packageName = pathInfo.Directory.Parent.Name;
+                return string.Format("{0}:{1}:{2}", packageName, archName, boardName);
+            }
+            return boardName;
+        }
+
+        /// <summary>
+        /// This hunts for the "boards.txt" file containing the particular board definition
+        /// </summary>
+        /// <param name="arduinoIDEPath"></param>
+        /// <returns></returns>
+        string FindBoardFilePath(string arduinoIDEPath, string boardName)
+        {
+            if (!string.IsNullOrWhiteSpace(arduinoIDEPath))
+            {
+                string arduinoPath = IOPath.GetDirectoryName(arduinoIDEPath);
+
+                string boardsPath = IOPath.Combine(arduinoPath, "hardware\\arduino\\avr\\boards.txt");
+
+                if (ContainsBoardDefinition(boardsPath, boardName))
+                {
+                    return boardsPath;
+                }
+
+            }
+
+            var sketchbookLocation = GetUserSketchbookLocation();
+            if (!string.IsNullOrWhiteSpace(sketchbookLocation))
+            {
+                var hardwareLocaiton = IOPath.Combine(sketchbookLocation, "hardware");
+                DirectoryInfo di = new DirectoryInfo(sketchbookLocation);
+
+
+                foreach (var name in di.EnumerateFiles("boards.txt", SearchOption.AllDirectories).Select(f => f.FullName))
+                {
+                    if (ContainsBoardDefinition(name, boardName))
+                    {
+                        return name;
+                    }
+                }
+
+            }
+            return null;
+
+        }
+
+        static bool ContainsBoardDefinition(string boardsFile, string boardname)
+        {
+            if (new FileInfo(boardsFile).Exists)
+            {
+                var lines = new List<string>();
+                using (var stream = new FileStream(boardsFile, FileMode.Open, FileAccess.Read))
+                using (var sr = new StreamReader(stream))
+                {
+                    while (!sr.EndOfStream)
+                    {
+                        lines.Add(sr.ReadLine().Trim());
+                    }
+                }
+                var meaningfulLines = (from l in lines where l.Length > 0 && l[0] != '#' select l);
+
+                var boardLines = (from l in
+                                           meaningfulLines
+                                       let index = l.IndexOf('.')
+                                       where index > 0
+                                       select l.Substring(0, index)).Distinct();
+
+                if (boardLines.Contains(boardname))
+                {
+                    return true;
+                }
+
+            }
+            return false;
+        }
+
+        static string GetUserSketchbookLocation()
+        {
+            var roamingAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            //TODO, maybe find a better way? 
+            var arduinoDataPath = IOPath.Combine(roamingAppDataPath, "Arduino15\\preferences.txt");
+            if (File.Exists(arduinoDataPath))
+            {
+                var lines = File.ReadAllLines(arduinoDataPath);
+                var sketchbookLocaitonLine = lines.First(s => s.StartsWith("sketchbook.path"));
+                if (sketchbookLocaitonLine != null)
+                {
+                    var sketchbookLocation = sketchbookLocaitonLine.Substring(sketchbookLocaitonLine.IndexOf('=') + 1);
+                    return sketchbookLocation;
+                }
+            }
+
+            return "";
+
+        }
 
         void CheckForUpdates()
         {

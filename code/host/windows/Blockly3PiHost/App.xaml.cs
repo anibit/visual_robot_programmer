@@ -1,4 +1,5 @@
-﻿using Gecko;
+﻿using Blockly3PiHost.Properties;
+using Gecko;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -26,6 +27,13 @@ namespace Blockly3PiHost
 
         private void App_Startup(object sender, StartupEventArgs e)
         {
+            //perform settings upgrade, if needed.
+            if (Settings.Default.SettingsNeedUpgrade)
+            {
+                Settings.Default.Upgrade();
+                Settings.Default.SettingsNeedUpgrade = false;
+                Settings.Default.Save();
+            }
             RemotingConfiguration.Configure("arduino.launcher.client.config", false);
 
             var launcher = new RemoteLaunch.Launcher();
